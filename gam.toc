@@ -1,0 +1,7 @@
+## Interface: 80100
+## Title: GAM
+## Notes: Grahams Addon Manager
+## Author: Graham Heffern
+## Version: 0.1
+## SavedVariables: gam
+main.lua
