@@ -3,5 +3,5 @@
 ## Notes: Grahams Addon Manager
 ## Author: Graham Heffern
 ## Version: 0.1
-## SavedVariables: gam
+## SavedVariables: gamSets
 main.lua

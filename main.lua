@@ -1,3 +1,13 @@
+local function listSets()
+    for k,v in pairs(gamSets) do
+        print(k,v)
+    end
+end
+
+local function createAddonSet(addonSetName)
+    gamSets[addonSetName] = {}
+end
+
 local function processArgs(argMsg)
     local args =  {}
     local i = 1
@@ -9,12 +19,15 @@ local function processArgs(argMsg)
 end
 
 local function gam(msg)
+    if gamSets == nil then
+        gamSets = {}
+    end
     local args = processArgs(msg)
     local cmd = table.remove(args,1)
     local setName = table.remove(args,1)
     local addOn = table.remove(args,1)
     if cmd == "create" then
-        print("in create")
+        createAddonSet(setName)
     elseif cmd == "delete" then
         print("in delete")
     elseif cmd == "add" then
@@ -25,6 +38,8 @@ local function gam(msg)
         print("in enable")
     elseif cmd == "disable" then
         print("in disable")
+    elseif cmd:lower() == "listsets" then
+        listSets()
     else 
         print("Invalid GAM command please try again")
     end
