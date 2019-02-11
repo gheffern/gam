@@ -1,3 +1,13 @@
+local function searchAddons(pattern)
+    print("GAM: Searching for \"" .. pattern .. "\"")
+    for i= 1, GetNumAddOns() do
+        local addonName =  select(1, GetAddOnInfo(i))
+        if string.match(addonName:lower(), pattern) ~= nil then
+            print(addonName)
+        end
+    end
+end
+
 local function disableAddonSet(setName)
     for k,v in pairs(gamSets[setName]) do
         disableAddOn(v)
@@ -53,12 +63,12 @@ end
 local function processArgs(argMsg)
     local args =  {}
     local i = 1
-    for v in string.gmatch(argMsg, "%a+") do
+    for v in string.gmatch(argMsg, "%S+") do
         args[i] = v
         i = i + 1
     end
     if args[3] ~= nil then
-        local name, title, notes,loadable,reason,security,newVersion =  GetAddOnInfo(addOn)
+        local name, _, _, _, reason, _, _ =  GetAddOnInfo(addOn)
         if reason == "MISSING" then
             print("GAM: Invalid Addon Name provided")
         return
@@ -71,23 +81,25 @@ local function gam(msg)
     if gamSets == nil then
         gamSets = {}
     end
-    local cmd, setName, addOn = processArgs(msg)
+    local cmd, name, addOn = processArgs(msg)
     if cmd == "create" then
-        createAddonSet(setName)
-    elseif cmd == "delete" then
-        deleteAddonSet(setName)
-    elseif cmd == "add" then
-        addAddonToSet(setName, addOn)
-    elseif cmd == "remove" then
-        deleteAddonFromSet(setName,addOn)
-    elseif cmd == "enable" then
-        enableAddonSet(setName)
-    elseif cmd == "disable" then
-        disableAddonSet(setName)
+        createAddonSet(name)
+    elseif cmd:lower() == "delete" then
+        deleteAddonSet(name)
+    elseif cmd:lower() == "add" then
+        addAddonToSet(name, addOn)
+    elseif cmd:lower() == "remove" then
+        deleteAddonFromSet(name,addOn)
+    elseif cmd:lower() == "enable" then
+        enableAddonSet(name)
+    elseif cmd:lower() == "disable" then
+        disableAddonSet(name)
     elseif cmd:lower() == "listsets" then
         listSets()
     elseif cmd:lower() == "list" then
-        list(setName)
+        list(name)
+    elseif cmd:lower() == "search" then
+        searchAddons(name)
     else 
         print("Invalid GAM command please try again")
     end
