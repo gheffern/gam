@@ -10,7 +10,7 @@ end
 
 local function disableAddonSet(setName)
     for k,v in pairs(gamSets[setName]) do
-        disableAddOn(v)
+        DisableAddOn(v)
     end
     ReloadUI()
 end
@@ -43,9 +43,19 @@ local function deleteAddonSet(setName)
     print("GAM: Deleted \"" .. setName .. "\"")
 end
 
-local function addAddonToSet(setName, addonName)
-    table.insert(gamSets[setName], addonName)
-    print("GAM: Added the addon, \"" .. addonName .. "\", to the set, \"" .. setName .. "\"")
+local function addAddonToSet(setName, pattern)
+    local nothingAdded = true
+    for i= 1, GetNumAddOns() do
+        local addonName =  select(1, GetAddOnInfo(i))
+        if string.match(addonName:lower(), pattern) ~= nil then
+            table.insert(gamSets[setName], addonName)
+            nothingAdded = false
+            print("GAM: Added the addon, \"" .. addonName .. "\", to the set, \"" .. setName .. "\"")
+        end
+    end
+    if nothingAdded then
+        print("GAM: No matching addons found, nothing added.")
+    end
 end
 
 local function listSets()
@@ -66,13 +76,6 @@ local function processArgs(argMsg)
     for v in string.gmatch(argMsg, "%S+") do
         args[i] = v
         i = i + 1
-    end
-    if args[3] ~= nil then
-        local name, _, _, _, reason, _, _ =  GetAddOnInfo(addOn)
-        if reason == "MISSING" then
-            print("GAM: Invalid Addon Name provided")
-        return
-        end
     end
     return args[1], args[2], args[3]
 end
